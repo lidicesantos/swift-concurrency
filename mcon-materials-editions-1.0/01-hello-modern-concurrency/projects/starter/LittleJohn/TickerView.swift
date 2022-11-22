@@ -75,10 +75,15 @@ struct TickerView: View {
         try await model.startTicker(selectedSymbols)
       } catch {
         if let error = error as? URLError,
-          error.code == .cancelled {
+           error.code == .cancelled {
           return
         }
         lastErrorMessage = error.localizedDescription
+      }
+    }
+    .onChange(of: model.tickerSymbols.count) { newValue in
+      if newValue == 0 {
+        presentationMode.wrappedValue.dismiss()
       }
     }
   }
